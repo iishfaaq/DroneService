@@ -39,6 +39,7 @@ public class Drone {
 	@Column (nullable = false)
 	private Integer battery;
 	
+	@Enumerated(EnumType.STRING)
 	private State state;
 	
 }
