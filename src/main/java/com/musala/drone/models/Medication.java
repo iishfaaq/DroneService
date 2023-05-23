@@ -14,11 +14,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class Medication {
 
 	@Id
@@ -39,4 +34,70 @@ public class Medication {
 	@ManyToOne  (fetch = FetchType.LAZY)
 	@JoinColumn(name = "drone_id")
 	private Drone drone;
+
+	public Medication() {
+		super();
+	}
+
+	public Medication(
+			@Pattern(regexp = "[A-Z0-9_]+", message = "Code can only contains numbers, uppercase letters & underscore") String code,
+			@Pattern(regexp = "[a-zA-Z_0-9-]+", message = "Name can only contains numbers, letters underscore & hyphen") String name,
+			Integer weight, String picture, Drone drone) {
+		super();
+		this.code = code;
+		this.name = name;
+		this.weight = weight;
+		this.picture = picture;
+		this.drone = drone;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Integer weight) {
+		this.weight = weight;
+	}
+
+	public String getPicture() {
+		return picture;
+	}
+
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+
+	public Drone getDrone() {
+		return drone;
+	}
+
+	public void setDrone(Drone drone) {
+		this.drone = drone;
+	}
+
+	@Override
+	public String toString() {
+		return "Medication [code=" + code + ", name=" + name + ", weight=" + weight + ", picture=" + picture
+				+ ", drone=" + drone + "]";
+	}
+	
+	
+	
+	
 }
