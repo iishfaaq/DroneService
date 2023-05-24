@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.musala.drone.enumerators.State;
 import com.musala.drone.models.Drone;
+import com.musala.drone.models.Medication;
 
 public interface DroneService {
 	
@@ -21,5 +22,7 @@ public interface DroneService {
 	List<Drone> getAvailableDrone();
 	
 	Drone updateDroneBattery(String serial_number, Integer battery);
+
+	List<Medication> getMedicationByDrone(String serial_number);
 
 }

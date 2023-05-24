@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Drone {
 	
 	@Max(value = 500, message = "Drone weight cannot exceed 500")
 	@Column (nullable = false)
+	@Positive
 	private Integer weightLimit = 500;
 	
 	@Min(value = 0, message = "Battery percentage cannot be lesser than 0%")

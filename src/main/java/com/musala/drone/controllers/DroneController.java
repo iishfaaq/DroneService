@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.musala.drone.enumerators.State;
 import com.musala.drone.models.Drone;
+import com.musala.drone.models.Medication;
 import com.musala.drone.repositories.DroneRepository;
 import com.musala.drone.services.DroneService;
 
@@ -29,7 +30,7 @@ public class DroneController {
 	
 	@PostMapping("/drone")
 	public ResponseEntity<Drone> createDrone( @RequestBody @Valid Drone drone) {
-		return new ResponseEntity<>(droneService.saveDrone(drone),HttpStatus.CREATED);		
+		return new ResponseEntity<Drone>(droneService.saveDrone(drone),HttpStatus.CREATED);		
 	}
 	
 	@GetMapping("/drone")
@@ -52,7 +53,7 @@ public class DroneController {
 			return new ResponseEntity<List<Drone>>(droneService.getDronesByState(state),HttpStatus.OK);
 	}
 	
-	@GetMapping("/drone/availaleDrones")
+	@GetMapping("/drone/availableDrones")
 	public ResponseEntity<List<Drone>> getAvailableDrone(){
 			return new ResponseEntity<List<Drone>>(droneService.getAvailableDrone(),HttpStatus.OK);
 	}
@@ -60,6 +61,13 @@ public class DroneController {
 	@PatchMapping("/drone/battery/{serial_number}")
 	public ResponseEntity<Drone> updateDroneBattery(@PathVariable String serial_number, @RequestBody Integer battery){
 		return new ResponseEntity<Drone>(droneService.updateDroneBattery(serial_number, battery),HttpStatus.OK);	
-}
+	}
+	
+	@GetMapping("/drone/medication/{serial_number}")
+	public ResponseEntity<List<Medication>> getMedicationByDrone (@PathVariable String serial_number){
+		return new ResponseEntity<List<Medication>>(droneService.getMedicationByDrone(serial_number),HttpStatus.OK);
+	}
+	
+	
 
 }

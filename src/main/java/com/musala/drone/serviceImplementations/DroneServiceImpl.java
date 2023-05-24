@@ -13,7 +13,9 @@ import com.musala.drone.enumerators.State;
 import com.musala.drone.exceptions.ExceptionMessegeCreator;
 import com.musala.drone.exceptions.UserNotFoundException;
 import com.musala.drone.models.Drone;
+import com.musala.drone.models.Medication;
 import com.musala.drone.repositories.DroneRepository;
+import com.musala.drone.repositories.MedicationRepository;
 import com.musala.drone.services.DroneService;
 
 import jakarta.transaction.Transactional;
@@ -30,6 +32,9 @@ public class DroneServiceImpl implements DroneService {
 	private DroneRepository droneRepository;
 	
 	@Autowired
+	private MedicationRepository medicationRepository;
+	
+	@Autowired
 	private ExceptionMessegeCreator exceptionMessegeCreator;
 	
 	@Override
@@ -39,7 +44,11 @@ public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public Optional<Drone> getDroneBySerialNumber(String serial_number) {
-		return droneRepository.findById(serial_number);
+		Optional<Drone> drone = droneRepository.findById(serial_number);
+		if(!drone.isPresent()) {
+			 throw new UserNotFoundException(exceptionMessegeCreator.createMessage(DRONE_NOT_FOUND));
+		} 
+		else return drone;
 	}
 	
 	@Override
@@ -104,6 +113,16 @@ public class DroneServiceImpl implements DroneService {
 			Drone droneResponse = droneRepository.saveAndFlush(drone.get());
 			return droneResponse;
 		}
+	}
+
+	@Override
+	public List<Medication> getMedicationByDrone(String serial_number) {
+		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
+		
+		List<Medication> medications = medicationRepository.findByDrone(drone.get());
+		
+		return medications;
+		
 	}
 
 	
