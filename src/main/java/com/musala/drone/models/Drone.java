@@ -28,7 +28,7 @@ public class Drone {
 	
 	@Max(value = 500, message = "Drone weight cannot exceed 500")
 	@Column (nullable = false)
-	private Integer weightLimit = 0;
+	private Integer weightLimit = 500;
 	
 	@Min(value = 0, message = "Battery percentage cannot be lesser than 0%")
 	@Max(value = 100, message = "Battery percentage cannot exceed 100%")
