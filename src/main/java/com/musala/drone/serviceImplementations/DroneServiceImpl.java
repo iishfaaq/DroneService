@@ -1,11 +1,15 @@
 package com.musala.drone.serviceImplementations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.musala.drone.enumerators.State;
 import com.musala.drone.exceptions.ExceptionMessegeCreator;
 import com.musala.drone.exceptions.UserNotFoundException;
 import com.musala.drone.models.Drone;
@@ -56,11 +60,30 @@ public class DroneServiceImpl implements DroneService {
 			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
 		}
 		else {
-			droneRepository.saveAndFlush(drone);
+			Drone droneResponse = droneRepository.saveAndFlush(drone);
+			return droneResponse;
 		}
-	
-		// TODO Auto-generated method stub
-		return null;
+	}
+
+	@Override
+	public List<Drone> getDronesByState(State state) {
+		List<Drone> drones = droneRepository.findByState(state);
+		return drones;
+	}
+
+	@Override
+	public List<Drone> getAvailableDrone() {
+		List<Drone> availableDrones = new ArrayList<>();
+		
+		List<Drone> idleDrones = this.getDronesByState(State.IDLE);
+		List<Drone> LoadingDrones = this.getDronesByState(State.LOADING);
+		
+		availableDrones.addAll(idleDrones);
+		availableDrones.addAll(LoadingDrones);
+		
+		availableDrones = availableDrones.stream().filter(drone -> drone.getBattery() >= 25).collect(Collectors.toList());
+		
+		return availableDrones;
 	}
 
 

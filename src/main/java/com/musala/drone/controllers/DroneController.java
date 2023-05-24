@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.musala.drone.enumerators.State;
 import com.musala.drone.models.Drone;
 import com.musala.drone.repositories.DroneRepository;
 import com.musala.drone.services.DroneService;
@@ -32,19 +33,27 @@ public class DroneController {
 	
 	@GetMapping("/drone")
 	public ResponseEntity<List<Drone>> getDrones() {
-		return new ResponseEntity<List<Drone>>(droneService.getDrones(),HttpStatus.OK);
-		
+		return new ResponseEntity<List<Drone>>(droneService.getDrones(),HttpStatus.OK);	
 	}
 	
 	@GetMapping("/drone/{serial_numer}")
-	public ResponseEntity<Optional<Drone>> getDroneySerialNumber(@PathVariable String serial_numer){
-			return new ResponseEntity<Optional<Drone>>(droneService.getDroneBySerialNumber(serial_numer),HttpStatus.OK);
-		
+	public ResponseEntity<Optional<Drone>> getDroneBySerialNumber(@PathVariable String serial_numer){
+			return new ResponseEntity<Optional<Drone>>(droneService.getDroneBySerialNumber(serial_numer),HttpStatus.OK);	
 	}
+	
 	@GetMapping("/drone/batteryLevel/{serial_numer}")
 	public ResponseEntity<Integer> getBatteryLevelForDrone(@PathVariable String serial_numer){
 			return new ResponseEntity<Integer>(droneService.getBatteryLevelForDrone(serial_numer),HttpStatus.OK);
-		
+	}
+	
+	@GetMapping("/drone/state/{state}")
+	public ResponseEntity<List<Drone>> getrDronesByState(@PathVariable State state){
+			return new ResponseEntity<List<Drone>>(droneService.getDronesByState(state),HttpStatus.OK);
+	}
+	
+	@GetMapping("/drone/availaleDrones")
+	public ResponseEntity<List<Drone>> getAvailableDrone(){
+			return new ResponseEntity<List<Drone>>(droneService.getAvailableDrone(),HttpStatus.OK);
 	}
 
 }
