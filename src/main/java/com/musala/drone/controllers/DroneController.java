@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.musala.drone.enumerators.State;
@@ -66,6 +68,13 @@ public class DroneController {
 	@GetMapping("/drone/medication/{serial_number}")
 	public ResponseEntity<List<Medication>> getMedicationByDrone (@PathVariable String serial_number){
 		return new ResponseEntity<List<Medication>>(droneService.getMedicationByDrone(serial_number),HttpStatus.OK);
+	}
+	
+	@PutMapping("/drone/medication/loadMedicationToDrone")
+	public ResponseEntity<String> loadMedicationToDrone(@RequestParam  String serial_number, @RequestParam List<String> medication_code){
+		return new ResponseEntity<String>(droneService.loadMedicationToDrone(serial_number),HttpStatus.OK);
+	
+		 
 	}
 	
 	

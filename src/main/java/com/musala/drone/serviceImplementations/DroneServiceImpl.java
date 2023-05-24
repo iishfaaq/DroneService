@@ -125,6 +125,12 @@ public class DroneServiceImpl implements DroneService {
 		
 	}
 
+	@Override
+	public String loadMedicationToDrone(String serial_number, List<String> medication_code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }

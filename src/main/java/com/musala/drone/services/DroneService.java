@@ -25,4 +25,6 @@ public interface DroneService {
 
 	List<Medication> getMedicationByDrone(String serial_number);
 
+	String loadMedicationToDrone(String serial_number, List<String> medication_code);
+
 }
