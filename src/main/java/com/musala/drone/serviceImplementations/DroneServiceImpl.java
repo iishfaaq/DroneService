@@ -50,6 +50,19 @@ public class DroneServiceImpl implements DroneService {
 		}
 	}
 
+	@Override
+	public Drone saveDrone(Drone drone) {
+		if(droneRepository.count() >= MAXIMUM_FLEET_LIMIT) {
+			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
+		}
+		else {
+			droneRepository.saveAndFlush(drone);
+		}
+	
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 

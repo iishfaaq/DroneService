@@ -12,5 +12,7 @@ public interface DroneService {
 	Optional<Drone> getDroneBySerialNumber(String serial_number);
 
 	Integer getBatteryLevelForDrone(String serial_numer);
+	
+	Drone saveDrone(Drone drone);
 
 }

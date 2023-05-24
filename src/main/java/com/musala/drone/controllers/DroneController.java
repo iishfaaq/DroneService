@@ -1,6 +1,7 @@
 package com.musala.drone.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,13 +24,10 @@ public class DroneController {
 	@Autowired
 	private DroneService droneService;
 	
-	@Autowired
-	private DroneRepository droneRepository;
 	
 	@PostMapping("/drone")
 	public ResponseEntity<Drone> createDrone( @RequestBody @Valid Drone drone) {
-		return new ResponseEntity<>(droneRepository.save(drone),HttpStatus.CREATED);
-		
+		return new ResponseEntity<>(droneService.saveDrone(drone),HttpStatus.CREATED);		
 	}
 	
 	@GetMapping("/drone")
@@ -38,7 +36,12 @@ public class DroneController {
 		
 	}
 	
-	@GetMapping("/drone/serialNumer/{serial_numer}")
+	@GetMapping("/drone/{serial_numer}")
+	public ResponseEntity<Optional<Drone>> getDroneySerialNumber(@PathVariable String serial_numer){
+			return new ResponseEntity<Optional<Drone>>(droneService.getDroneBySerialNumber(serial_numer),HttpStatus.OK);
+		
+	}
+	@GetMapping("/drone/batteryLevel/{serial_numer}")
 	public ResponseEntity<Integer> getBatteryLevelForDrone(@PathVariable String serial_numer){
 			return new ResponseEntity<Integer>(droneService.getBatteryLevelForDrone(serial_numer),HttpStatus.OK);
 		
