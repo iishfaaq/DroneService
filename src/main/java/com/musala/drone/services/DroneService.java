@@ -19,5 +19,7 @@ public interface DroneService {
 	List<Drone> getDronesByState(State state);
 
 	List<Drone> getAvailableDrone();
+	
+	Drone updateDroneBattery(String serial_number, Integer battery);
 
 }

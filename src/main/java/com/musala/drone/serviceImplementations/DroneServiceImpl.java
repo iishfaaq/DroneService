@@ -43,8 +43,8 @@ public class DroneServiceImpl implements DroneService {
 	}
 	
 	@Override
-	public Integer getBatteryLevelForDrone(String serial_numer) {
-		Optional<Drone> drone = this.getDroneBySerialNumber(serial_numer);
+	public Integer getBatteryLevelForDrone(String serial_number) {
+		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
 		
 		if(drone.isPresent()) {
 			return drone.get().getBattery();
@@ -58,6 +58,9 @@ public class DroneServiceImpl implements DroneService {
 	public Drone saveDrone(Drone drone) {
 		if(droneRepository.count() >= MAXIMUM_FLEET_LIMIT) {
 			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
+		}
+		else if(drone.getBattery() < 25 && drone.getState() == State.LOADING) {
+			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
 		}
 		else {
 			Drone droneResponse = droneRepository.saveAndFlush(drone);
@@ -86,6 +89,22 @@ public class DroneServiceImpl implements DroneService {
 		return availableDrones;
 	}
 
+	@Override
+	public Drone updateDroneBattery(String serial_number, Integer battery) {
+		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
+		
+		if(!drone.isPresent()) {
+			throw new UserNotFoundException(exceptionMessegeCreator.createMessage(DRONE_NOT_FOUND));
+		}
+		else if(battery < 25 && drone.get().getState() == State.LOADING) {
+			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
+		}
+		else {
+			drone.get().setBattery(battery);
+			Drone droneResponse = droneRepository.saveAndFlush(drone.get());
+			return droneResponse;
+		}
+	}
 
 	
 

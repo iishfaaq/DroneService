@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,14 +37,14 @@ public class DroneController {
 		return new ResponseEntity<List<Drone>>(droneService.getDrones(),HttpStatus.OK);	
 	}
 	
-	@GetMapping("/drone/{serial_numer}")
-	public ResponseEntity<Optional<Drone>> getDroneBySerialNumber(@PathVariable String serial_numer){
-			return new ResponseEntity<Optional<Drone>>(droneService.getDroneBySerialNumber(serial_numer),HttpStatus.OK);	
+	@GetMapping("/drone/{serial_number}")
+	public ResponseEntity<Optional<Drone>> getDroneBySerialNumber(@PathVariable String serial_number){
+			return new ResponseEntity<Optional<Drone>>(droneService.getDroneBySerialNumber(serial_number),HttpStatus.OK);	
 	}
 	
-	@GetMapping("/drone/batteryLevel/{serial_numer}")
-	public ResponseEntity<Integer> getBatteryLevelForDrone(@PathVariable String serial_numer){
-			return new ResponseEntity<Integer>(droneService.getBatteryLevelForDrone(serial_numer),HttpStatus.OK);
+	@GetMapping("/drone/batteryLevel/{serial_number}")
+	public ResponseEntity<Integer> getBatteryLevelForDrone(@PathVariable String serial_number){
+			return new ResponseEntity<Integer>(droneService.getBatteryLevelForDrone(serial_number),HttpStatus.OK);
 	}
 	
 	@GetMapping("/drone/state/{state}")
@@ -55,5 +56,10 @@ public class DroneController {
 	public ResponseEntity<List<Drone>> getAvailableDrone(){
 			return new ResponseEntity<List<Drone>>(droneService.getAvailableDrone(),HttpStatus.OK);
 	}
+	
+	@PatchMapping("/drone/battery/{serial_number}")
+	public ResponseEntity<Drone> updateDroneBattery(@PathVariable String serial_number, @RequestBody Integer battery){
+		return new ResponseEntity<Drone>(droneService.updateDroneBattery(serial_number, battery),HttpStatus.OK);	
+}
 
 }
