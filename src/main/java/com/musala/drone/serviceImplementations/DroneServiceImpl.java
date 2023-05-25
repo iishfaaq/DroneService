@@ -149,6 +149,10 @@ public class DroneServiceImpl implements DroneService {
 		
 		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
 		
+		if(drone.get().getBattery() < 25) {
+			throw new IllegalArgumentException(messegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
+		}
+		
 		List<Medication> addingMedications = new ArrayList<>();
 		
 		for (String code : medication_code) {
