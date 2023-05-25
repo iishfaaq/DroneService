@@ -17,6 +17,7 @@ import com.musala.drone.models.Medication;
 import com.musala.drone.repositories.DroneRepository;
 import com.musala.drone.repositories.MedicationRepository;
 import com.musala.drone.services.DroneService;
+import com.musala.drone.services.MedicationService;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,10 @@ public class DroneServiceImpl implements DroneService {
 	private MedicationRepository medicationRepository;
 	
 	@Autowired
-	private ExceptionMessegeCreator exceptionMessegeCreator;
+	private MedicationService medicationService;
+	
+	@Autowired
+	private ExceptionMessegeCreator messegeCreator;
 	
 	@Override
 	public List<Drone> getDrones() {
@@ -46,7 +50,7 @@ public class DroneServiceImpl implements DroneService {
 	public Optional<Drone> getDroneBySerialNumber(String serial_number) {
 		Optional<Drone> drone = droneRepository.findById(serial_number);
 		if(!drone.isPresent()) {
-			 throw new UserNotFoundException(exceptionMessegeCreator.createMessage(DRONE_NOT_FOUND));
+			 throw new UserNotFoundException(messegeCreator.createMessage(DRONE_NOT_FOUND));
 		} 
 		else return drone;
 	}
@@ -59,17 +63,17 @@ public class DroneServiceImpl implements DroneService {
 			return drone.get().getBattery();
 		}
 		else{
-			throw new UserNotFoundException(exceptionMessegeCreator.createMessage(DRONE_NOT_FOUND));
+			throw new UserNotFoundException(messegeCreator.createMessage(DRONE_NOT_FOUND));
 		}
 	}
 
 	@Override
 	public Drone saveDrone(Drone drone) {
 		if(droneRepository.count() >= MAXIMUM_FLEET_LIMIT) {
-			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
+			throw new IllegalArgumentException(messegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
 		}
 		else if(drone.getBattery() < 25 && drone.getState() == State.LOADING) {
-			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
+			throw new IllegalArgumentException(messegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
 		}
 		else {
 			Drone droneResponse = droneRepository.saveAndFlush(drone);
@@ -103,10 +107,10 @@ public class DroneServiceImpl implements DroneService {
 		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
 		
 		if(!drone.isPresent()) {
-			throw new UserNotFoundException(exceptionMessegeCreator.createMessage(DRONE_NOT_FOUND));
+			throw new UserNotFoundException(messegeCreator.createMessage(DRONE_NOT_FOUND));
 		}
 		else if(battery < 25 && drone.get().getState() == State.LOADING) {
-			throw new IllegalArgumentException(exceptionMessegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
+			throw new IllegalArgumentException(messegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
 		}
 		else {
 			drone.get().setBattery(battery);
@@ -124,13 +128,55 @@ public class DroneServiceImpl implements DroneService {
 		return medications;
 		
 	}
+	
+	@Override
+	public Long getremainingWeight(String serial_number) {
+		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
+		
+		List<Medication> exsitingMedication = this.getMedicationByDrone(serial_number);
+		
+		Long existingWeight = exsitingMedication.stream().mapToLong(Medication :: getWeight).sum();
+		
+		Long remainingWeight = drone.get().getWeightLimit() - existingWeight;
+		
+		return remainingWeight;
+	}
 
 	@Override
 	public String loadMedicationToDrone(String serial_number, List<String> medication_code) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Long remainingWeight = this.getremainingWeight(serial_number);
+		
+		Optional<Drone> drone = this.getDroneBySerialNumber(serial_number);
+		
+		List<Medication> addingMedications = new ArrayList<>();
+		
+		for (String code : medication_code) {
+			Optional<Medication> medication = medicationService.getMedicationByCode(code);
+			addingMedications.add(medication.get());
+		}
+		
+		Long newWeight = addingMedications.stream().mapToLong(Medication :: getWeight).sum();
+		
+		if(newWeight > remainingWeight) {
+			throw new IllegalArgumentException(messegeCreator.createMessage(WEIGHT_EXCEEDED));
+		}
+		else {
+			if(newWeight.longValue() < remainingWeight.longValue()) {
+				drone.get().setState(State.LOADING);
+			}
+			else if(newWeight.equals(remainingWeight)) {
+				drone.get().setState(State.LOADED);
+			}
+			droneRepository.saveAndFlush(drone.get());
+			
+			for (Medication medication : addingMedications) {
+				medication.setDrone(drone.get());
+			}
+			
+			return messegeCreator.createMessage(SUCESSFULL_LOAD);
+		}
+		
 	}
-
-	
 
 }

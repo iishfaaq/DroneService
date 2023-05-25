@@ -1,5 +1,7 @@
 package com.musala.drone.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,12 +31,13 @@ public class Medication {
 	
 	@Column (nullable = false)
 	@Positive
-	private Integer weight;
+	private Long weight;
 	
 	private String picture;
 	
 	@ManyToOne  (fetch = FetchType.LAZY)
 	@JoinColumn(name = "drone_id")
+	@JsonIgnore
 	private Drone drone;
 
 	public Medication() {
@@ -44,7 +47,7 @@ public class Medication {
 	public Medication(
 			@Pattern(regexp = "[A-Z0-9_]+", message = "Code can only contains numbers, uppercase letters & underscore") String code,
 			@Pattern(regexp = "[a-zA-Z_0-9-]+", message = "Name can only contains numbers, letters underscore & hyphen") String name,
-			Integer weight, String picture, Drone drone) {
+			Long weight, String picture, Drone drone) {
 		super();
 		this.code = code;
 		this.name = name;
@@ -69,11 +72,11 @@ public class Medication {
 		this.name = name;
 	}
 
-	public Integer getWeight() {
+	public Long getWeight() {
 		return weight;
 	}
 
-	public void setWeight(Integer weight) {
+	public void setWeight(Long weight) {
 		this.weight = weight;
 	}
 

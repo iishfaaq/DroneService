@@ -30,7 +30,7 @@ public class Drone {
 	@Max(value = 500, message = "Drone weight cannot exceed 500")
 	@Column (nullable = false)
 	@Positive
-	private Integer weightLimit = 500;
+	private Long weightLimit = 500L;
 	
 	@Min(value = 0, message = "Battery percentage cannot be lesser than 0%")
 	@Max(value = 100, message = "Battery percentage cannot exceed 100%")
@@ -47,7 +47,7 @@ public class Drone {
 
 
 	public Drone(@Size(min = 1, max = 100) String serialNumber, Model model,
-			@Max(value = 500, message = "Drone weight cannot exceed 500") Integer weightLimit,
+			@Max(value = 500, message = "Drone weight cannot exceed 500") Long weightLimit,
 			@Min(value = 0, message = "Battery percentage cannot be lesser than 0%") @Max(value = 100, message = "Battery percentage cannot exceed 100%") Integer battery,
 			State state) {
 		super();
@@ -79,12 +79,12 @@ public class Drone {
 	}
 
 
-	public Integer getWeightLimit() {
+	public Long getWeightLimit() {
 		return weightLimit;
 	}
 
 
-	public void setWeightLimit(Integer weightLimit) {
+	public void setWeightLimit(Long weightLimit) {
 		this.weightLimit = weightLimit;
 	}
 

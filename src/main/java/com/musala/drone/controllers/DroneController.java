@@ -70,9 +70,14 @@ public class DroneController {
 		return new ResponseEntity<List<Medication>>(droneService.getMedicationByDrone(serial_number),HttpStatus.OK);
 	}
 	
+	@GetMapping("/drone/remainingWeight/{serial_number}")
+	public ResponseEntity<Long> getremainingWeight (@PathVariable String serial_number){
+		return new ResponseEntity<Long>(droneService.getremainingWeight(serial_number),HttpStatus.OK);
+	}
+	
 	@PutMapping("/drone/medication/loadMedicationToDrone")
 	public ResponseEntity<String> loadMedicationToDrone(@RequestParam  String serial_number, @RequestParam List<String> medication_code){
-		return new ResponseEntity<String>(droneService.loadMedicationToDrone(serial_number),HttpStatus.OK);
+		return new ResponseEntity<String>(droneService.loadMedicationToDrone(serial_number, medication_code),HttpStatus.OK);
 	
 		 
 	}

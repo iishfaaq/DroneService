@@ -27,4 +27,6 @@ public interface DroneService {
 
 	String loadMedicationToDrone(String serial_number, List<String> medication_code);
 
+	Long getremainingWeight(String serial_number);
+
 }
