@@ -199,19 +199,12 @@ public class DroneServiceImpl implements DroneService {
 	@Scheduled(fixedRateString = "${log.intervel}")
 	public void logCapacity() {
 		
-//		Logs log = new Logs();
-		
 		logger.info("Capacity check for drone "+ new Date());
-//		log.setMessege("Capacity check for drone");
-//		logsRepository.saveAndFlush(log);
 		
 		List<Drone>  drones = this.getDrones();
 		
 		drones.forEach(drone -> {
-//			Logs log2 = new Logs();
 			logger.info("Drone " + drone.getSerialNumber() + " has " + drone.getBattery() + " of battery percentage");
-//			log2.setMessege("Drone " + drone.getSerialNumber() + " has " + drone.getBattery() + " of battery percentage");
-//			logsRepository.saveAndFlush(log);
 		});
 	}
 }
