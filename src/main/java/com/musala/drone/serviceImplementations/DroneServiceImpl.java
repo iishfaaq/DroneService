@@ -1,20 +1,27 @@
 package com.musala.drone.serviceImplementations;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.musala.drone.enumerators.State;
 import com.musala.drone.exceptions.ExceptionMessegeCreator;
 import com.musala.drone.exceptions.UserNotFoundException;
 import com.musala.drone.models.Drone;
+import com.musala.drone.models.Logs;
 import com.musala.drone.models.Medication;
 import com.musala.drone.repositories.DroneRepository;
+import com.musala.drone.repositories.LogsRepository;
 import com.musala.drone.repositories.MedicationRepository;
 import com.musala.drone.services.DroneService;
 import com.musala.drone.services.MedicationService;
@@ -40,6 +47,11 @@ public class DroneServiceImpl implements DroneService {
 	
 	@Autowired
 	private ExceptionMessegeCreator messegeCreator;
+	
+	@Autowired
+	private LogsRepository logsRepository;
+	
+	Logger logger = LoggerFactory.getLogger(DroneServiceImpl.class);
 	
 	@Override
 	public List<Drone> getDrones() {
@@ -182,5 +194,24 @@ public class DroneServiceImpl implements DroneService {
 		}
 		
 	}
-
+	
+	@Async
+	@Scheduled(fixedRateString = "${log.intervel}")
+	public void logCapacity() {
+		
+//		Logs log = new Logs();
+		
+		logger.info("Capacity check for drone "+ new Date());
+//		log.setMessege("Capacity check for drone");
+//		logsRepository.saveAndFlush(log);
+		
+		List<Drone>  drones = this.getDrones();
+		
+		drones.forEach(drone -> {
+//			Logs log2 = new Logs();
+			logger.info("Drone " + drone.getSerialNumber() + " has " + drone.getBattery() + " of battery percentage");
+//			log2.setMessege("Drone " + drone.getSerialNumber() + " has " + drone.getBattery() + " of battery percentage");
+//			logsRepository.saveAndFlush(log);
+		});
+	}
 }
