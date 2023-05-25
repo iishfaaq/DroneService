@@ -18,10 +18,8 @@ import com.musala.drone.enumerators.State;
 import com.musala.drone.exceptions.ExceptionMessegeCreator;
 import com.musala.drone.exceptions.UserNotFoundException;
 import com.musala.drone.models.Drone;
-import com.musala.drone.models.Logs;
 import com.musala.drone.models.Medication;
 import com.musala.drone.repositories.DroneRepository;
-import com.musala.drone.repositories.LogsRepository;
 import com.musala.drone.repositories.MedicationRepository;
 import com.musala.drone.services.DroneService;
 import com.musala.drone.services.MedicationService;
@@ -48,8 +46,6 @@ public class DroneServiceImpl implements DroneService {
 	@Autowired
 	private ExceptionMessegeCreator messegeCreator;
 	
-	@Autowired
-	private LogsRepository logsRepository;
 	
 	Logger logger = LoggerFactory.getLogger(DroneServiceImpl.class);
 	

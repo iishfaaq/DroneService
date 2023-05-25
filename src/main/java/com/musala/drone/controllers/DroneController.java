@@ -77,9 +77,7 @@ public class DroneController {
 	
 	@PutMapping("/drone/medication/loadMedicationToDrone")
 	public ResponseEntity<String> loadMedicationToDrone(@RequestParam  String serial_number, @RequestParam List<String> medication_code){
-		return new ResponseEntity<String>(droneService.loadMedicationToDrone(serial_number, medication_code),HttpStatus.OK);
-	
-		 
+		return new ResponseEntity<String>(droneService.loadMedicationToDrone(serial_number, medication_code),HttpStatus.OK); 
 	}
 	
 	
