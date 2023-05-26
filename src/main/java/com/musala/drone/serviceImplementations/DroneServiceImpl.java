@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,12 @@ public class DroneServiceImpl implements DroneService {
 	@Autowired
 	private ExceptionMessegeCreator messegeCreator;
 	
+	@Value("${minimum.battery.level}")
+	private Integer batteryLevel;
+	
+	@Value("${maximum.fleet.limit}")
+	private Integer maimumFleetLimit;
+	
 	
 	Logger logger = LoggerFactory.getLogger(DroneServiceImpl.class);
 	
@@ -77,10 +84,10 @@ public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public Drone saveDrone(Drone drone) {
-		if(droneRepository.count() >= MAXIMUM_FLEET_LIMIT) {
+		if(droneRepository.count() >= maimumFleetLimit) {
 			throw new IllegalArgumentException(messegeCreator.createMessage(FLEET_LIMIT_EXCEEDED));
 		}
-		else if(drone.getBattery() < 25 && drone.getState() == State.LOADING) {
+		else if(drone.getBattery() < batteryLevel && drone.getState() == State.LOADING) {
 			throw new IllegalArgumentException(messegeCreator.createMessage(LOW_BATTERY_FOR_LOADING));
 		}
 		else {
@@ -105,7 +112,7 @@ public class DroneServiceImpl implements DroneService {
 		availableDrones.addAll(idleDrones);
 		availableDrones.addAll(LoadingDrones);
 		
-		availableDrones = availableDrones.stream().filter(drone -> drone.getBattery() >= 25).collect(Collectors.toList());
+		availableDrones = availableDrones.stream().filter(drone -> drone.getBattery() >= batteryLevel).collect(Collectors.toList());
 		
 		return availableDrones;
 	}
