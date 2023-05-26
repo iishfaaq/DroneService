@@ -10,8 +10,9 @@ Can connect to H2 DB through http://localhost:8080/h2-console after starting the
 	
 Swagger Has been configured and API documentation can be viewed from http://localhost:8080/swagger-ui/index.html.
 
+![image](https://github.com/iishfaaq/DroneService/assets/36529006/4230362a-5035-4cd1-b710-1173843afc68)
 
-
+![image](https://github.com/iishfaaq/DroneService/assets/36529006/63519558-80e3-4fe1-8c57-898189c71a3b)
 
 
 Assumptions
